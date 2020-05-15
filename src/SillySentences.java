@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class sillySentences {
+public class SillySentences {
     static final String SPACE = " ";
     static int MAX_RECURSIVE_DEPTH = 3;
     static int RECURSIVE_ATTEMPT = 0;
