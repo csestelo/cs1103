@@ -5,6 +5,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
+
+class ConnectionThread extends Thread {
+    Socket connection;
+
+    ConnectionThread(Socket connection) {
+        this.connection = connection;
+    }
+
+    public void run() {
+        ReadRequest.handleConnection(connection);
+    }
+}
+
 public class ReadRequest {
     private final static int LISTENING_PORT = 50505;
 
@@ -21,7 +34,8 @@ public class ReadRequest {
             while (true) {
                 Socket connection = serverSocket.accept();
                 System.out.println("\nConnection from " + connection.getRemoteSocketAddress());
-                handleConnection(connection);
+                ConnectionThread thread = new ConnectionThread(connection);
+                thread.start();
             }
         } catch (Exception e) {
             System.out.println("Server socket shut down unexpectedly!");
@@ -30,7 +44,7 @@ public class ReadRequest {
         }
     }
 
-    private static void handleConnection(Socket connection) {
+    public static void handleConnection(Socket connection) {
         try (connection) { // make SURE connection is closed
             String rootDirectory = "/Users/cintia.sestelo/projects/cs-1103/src";
             Scanner in = new Scanner(connection.getInputStream());
